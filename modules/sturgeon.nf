@@ -4,13 +4,10 @@ process sturgeon {
     containerOptions "--entrypoint /usr/bin/env -u 0:0 "
 
 
-    //Lock file is not getting removed (you also don't really need it for the GCP anyway...)
-    // Need to make sure that the output directory becomes a val or params, so it does not get mounted or anything but can be set dynamically
-
     input:
     path(input)
-    path(outdir)
-    path(barcode)
+    val(outdir)
+    val(barcode)
     path(model)
 
     output:
@@ -25,6 +22,19 @@ process sturgeon {
     --lock ${params.lock} \
     --barcode 05 \
     --model ${model} \
-    -sf ${params.shutdown_file} > sturgeon_output.log 2>&1
+    -sf "${params.shutdown_file}" > "${outdir}/sturgeon_output.log" 2>&1 &
+
+    #Logic below is to currently handle shutdown for a nextflow/cloud run
+    STURGEON_PID=\$!
+
+    sleep 5
+
+    sleep ${params.sturgeon_timeout ?: 40}
+
+    touch "${params.shutdown_file}"
+
+    timeout 3000 bash -c "while kill -0 \$STURGEON_PID 2>/dev/null; do sleep 1; done" || true
+
+    wait \$STURGEON_PID 2>/dev/null || true
     """
 }
