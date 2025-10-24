@@ -1,0 +1,7 @@
+#Sturgeon input parameters
+input: "gs://pmc-bdc-dev-nextflow-results/sturgeon_dev/raw_data/20250819_0924_P2I-00332-A_PBE94195_a524b9c1/"
+barcode: "5"
+model: "gs://pmc-bdc-dev-nextflow-wd/reference_data/sturgeon_model/general.zip"
+shutdown_file: "shutdown.flag"
+sturgeon_timeout: 240
+lock: "script.lock"

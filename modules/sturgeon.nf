@@ -11,8 +11,7 @@ process sturgeon {
     path(model)
 
     output:
-    path("${outdir}/*"), emit: predictions
-    path("sturgeon_output.log"), emit: log
+    path("${outdir}/*"), emit: main_output
 
     script:
     """
@@ -22,7 +21,8 @@ process sturgeon {
     --lock ${params.lock} \
     --barcode 05 \
     --model ${model} \
-    -sf "${params.shutdown_file}" > "${outdir}/sturgeon_output.log" 2>&1 &
+    -sf "${params.shutdown_file}" > "sturgeon_output.log" 2>&1 &
+
 
     #Logic below is to currently handle shutdown for a nextflow/cloud run
     STURGEON_PID=\$!
@@ -36,5 +36,8 @@ process sturgeon {
     timeout 3000 bash -c "while kill -0 \$STURGEON_PID 2>/dev/null; do sleep 1; done" || true
 
     wait \$STURGEON_PID 2>/dev/null || true
+
+    # Move log file after process completes
+    mv sturgeon_output.log "${outdir}/"
     """
 }

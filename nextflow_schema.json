@@ -11,8 +11,7 @@
       "fa_icon": "fas fa-terminal",
       "description": "Define where the pipeline should find input data and save output data.",
       "required": [
-        "input",
-        "outdir"
+        "input"
       ],
       "properties": {
         "input": {
@@ -22,15 +21,7 @@
           "schema": "assets/schema_input.json",
           "description": "Directory where bam files ares. Input can be {nanopore_hash}/bam_pass/barcode_xx/, {nanopore_hash}/bam_pass/ or {nanopore_hash}/.",
           "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-          "fa_icon": "fas fa-file-csv",
-          "default": "gs://pmc-bdc-dev-nextflow-results/sturgeon_dev/raw_data/20250819_0924_P2I-00332-A_PBE94195_a524b9c1/"
-        },
-        "outdir": {
-          "type": "string",
-          "format": "directory-path",
-          "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-          "fa_icon": "fas fa-folder-open",
-          "default": "sturgeon_classification"
+          "fa_icon": "fas fa-file-csv"
         }
       }
     },
