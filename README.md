@@ -18,7 +18,7 @@ Current pipelines
 ```
 Install the nextflow launcher and activate the venv
 Create the nflaunch.sh script and run as:
-./nflaunch.sh
+./sturgeon_nflaunch.sh
 ```
 #### For now the sturgeon_nflaunch.sh script can be used for testing
   
