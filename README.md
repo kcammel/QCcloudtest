@@ -36,10 +36,9 @@ Any advise for common problems or issues.
 
 ## TO-DO
 
-[] Test deployment on HPC \
-[] Input parameters through yml/json file \
-[] Clean up setting of parameters \
-[] Edit wrapper script to handle better shutdown triggering in nextflow/cloud integration \
-[] Consider ways to host multiple pipelines in one repository \
-[] Send email upon completion? \
-[] Implement nf-test 
+- [ ] Test deployment on HPC 
+- [ ] Input parameters through yml/json file 
+- [ ] Clean up setting of parameters 
+- [ ] Edit wrapper script to handle better shutdown triggering in nextflow/cloud integration 
+- [ ] Consider ways to host multiple pipelines in one repository 
+- [ ] Send email upon completion? 
