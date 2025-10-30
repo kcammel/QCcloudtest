@@ -1,29 +1,44 @@
-# README #
+# Nanopore nextflow pipelines repository
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This repo contains the nextflow pipelines created for analyzing Oxford Nanopore sequencing data.
 
-### What is this repository for? ###
+## Description
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Current pipelines
 
-### How do I get set up? ###
+- Sturgeon: CNS Classifier
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Getting Started
 
-### Contribution guidelines ###
+### Executing program
 
-* Writing tests
-* Code review
-* Other guidelines
+* Deployment is currently only on Google Cloud
+* Pipelines must be run through the [nf-launch platform](https://bitbucket.org/princessmaximacenter/nextflow-launcher/)
 
-### Who do I talk to? ###
+```
+Install the nextflow launcher and activate the venv
+Create the nflaunch.sh script and run as:
+./sturgeon_nflaunch.sh
+```
+#### For now the sturgeon_nflaunch.sh script can be used for testing
+  
 
-* Repo owner or admin
-* Other community or team contact
+## Help
+
+Any advise for common problems or issues.
+
+## Contributors
+
+- Karlijn Cammel
+- Rodrigo Jara Calogeropulos
+
+## Version History
+
+## TO-DO
+
+- [ ] Test deployment on HPC 
+- [ ] Input parameters through yml/json file 
+- [ ] Clean up setting of parameters 
+- [ ] Edit wrapper script to handle better shutdown triggering in nextflow/cloud integration 
+- [ ] Consider ways to host multiple pipelines in one repository 
+- [ ] Send email upon completion? 
