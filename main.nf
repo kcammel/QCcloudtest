@@ -1,16 +1,15 @@
-//#!/usr/bin/env nextflow
+#!/usr/bin/env nextflow
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This pipeline runs the Sturgeon CNS classifier on Nanopore Methylation sequencing data
+    princessmaximacenter/nextflow_pipeline/
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Requirements/expectations:
- - Nanopore methylation sequencing data in mapped BAM format
- - Barcode used for sample during sequencing
- - Model used for sturgeon prediction 
+    Bitbucket : https://bitbucket.org/princessmaximacenter/nextflow_pipeline/
+----------------------------------------------------------------------------------------
 */
 
 
-
+nextflow.enable.dsl=2
 
 
 /*
@@ -18,24 +17,50 @@ Requirements/expectations:
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include {QC_ANALYSIS} from "${projectDir}/workflows/qc/main.nf"
+include {STURGEON} from "${projectDir}/workflows/sturgeon/main.nf"
 
-include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
-include { STURGEON } from './workflows/SturgeonClassifier'
+include { paramsHelp } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PRIMARY WORKFLOW
+    ORCHESTRATOR WORKFLOW FOR RUNNING SPECIFIED ANALYSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-workflow {
-    //
-    // Validate parameters before analysis can start
-    //
-    validateParameters()
-    def session_id = java.util.UUID.randomUUID().toString().substring(0, 8)
-    //
-    // Run main workflow
-    //
-    STURGEON(params.input, session_id, params.barcode,params.model)
+
+//
+// WORKFLOW: Run main analysis pipeline depending on specified profile
+//
+
+
+workflow  {
+
+
+    switch (params.pipeline) {
+        case 'qc':
+            log.info "Starting QC Pipeline - Version: ${params.version}"
+            QC_ANALYSIS()
+            break
+        case 'sturgeon':
+            def input_ch = file(params.input, checkIfExists: true)
+            log.info "Starting Sturgeon Pipeline - Version: ${params.version}"
+            STURGEON(
+                input_ch,
+                params.outdir,
+                params.barcode,
+                params.model
+            )
+            break
+        default:
+            error "Unknown pipeline: '${params.pipeline}. Avalaible: qc, sturgeon"
+
+    }
 
 }
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    THE END
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
