@@ -17,8 +17,8 @@ nextflow.enable.dsl=2
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include {QC_ANALYSIS} from "${projectDir}/workflows/qc/main.nf"
-include {STURGEON} from "${projectDir}/workflows/sturgeon/main.nf"
+include {QC_ANALYSIS} from "./workflows/qc/main.nf"
+include {STURGEON} from "./workflows/sturgeon/main.nf"
 
 include { paramsHelp } from 'plugin/nf-schema'
 
@@ -34,7 +34,6 @@ include { paramsHelp } from 'plugin/nf-schema'
 
 
 workflow  {
-
 
     switch (params.pipeline) {
         case 'qc':

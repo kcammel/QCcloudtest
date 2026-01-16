@@ -1,8 +1,9 @@
 process sturgeon {
     label 'sturgeon_classifier'
+    label 'high_resource'
     //Docker container is currently changed to random public, as sturgeon is not public at the moment
     //container 'kcammel/sturgeon:v2.1.0' //Make this dynamic? 
-    container 'ubuntu:latest'
+    container 'hello-world:latest'
     containerOptions "--entrypoint /usr/bin/env -u 0:0 "
 
 

@@ -16,8 +16,8 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 workflow STURGEON{
     
     take:
-    bam_input_directory
-    output_directory
+    input
+    outdir
     barcode
     model
 
@@ -27,8 +27,8 @@ workflow STURGEON{
     ch_versions = Channel.empty()
 
     sturgeon(
-        bam_input_directory,
-        output_directory,
+        input,
+        outdir,
         barcode,
         model
     )
