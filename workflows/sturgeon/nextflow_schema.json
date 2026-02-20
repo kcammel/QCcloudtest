@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com///nextflow_schema.json",
+  "title": " pipeline parameters",
+  "description": "",
+  "type": "object",
+  "$defs": {
+    "input_output_options": {
+      "title": "Input/output options",
+      "type": "object",
+      "fa_icon": "fas fa-terminal",
+      "description": "Define where the pipeline should find input data and save output data.",
+      "required": ["input", "outdir"],
+      "properties": {
+        "input": {
+          "type": "string",
+          "format": "directory-path",
+          "exists": true,
+          "description": "Directory where bam files are located",
+          "help_text": "Directory where bam files are. Input can be {nanopore_hash}/bam_pass/barcode_xx/, {nanopore_hash}/bam_pass/ or {nanopore_hash}/.",
+          "fa_icon": "fas fa-folder-open"
+        },
+        "outdir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "The output directory where the results will be saved. Must use absolute paths to storage on Cloud infrastructure.",
+          "fa_icon": "fas fa-folder-open",
+          "help_text": "Output directory where sturgeon results will be stored"
+        }
+      }
+    },
+    "sturgeon_run_options": {
+      "title": "Sturgeon run options",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "properties": {
+        "barcode": {
+          "type": "string",
+          "description": "barcode used for sequencing, integer from 01 to 99",
+          "help_text": "barcodes for 01-09 can be given as e.g. 01, or 1",
+          "pattern": "^(?:0?[1-9]|[1-9][0-9])$"
+        },
+        "model": {
+          "type": "string",
+          "format": "file-path",
+          "description": "Model file (zip file) used for sturgeon classifier",
+          "pattern": "\\.zip$",
+          "mimetype": "zip"
+        },
+        "shutdown_file": {
+          "type": "string",
+          "default": "./shutdown.flag",
+          "hidden": true
+        },
+        "run_id": {
+          "type": "string",
+          "hidden": true
+        },
+        "lock": {
+          "type": "string",
+          "default": "script.lock",
+          "hidden": true
+        }
+      },
+      "required": ["barcode", "model"]
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/input_output_options"
+    },
+    {
+      "$ref": "#/$defs/sturgeon_run_options"
+    }
+  ]
+}

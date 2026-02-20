@@ -1,6 +1,9 @@
 process sturgeon {
     label 'sturgeon_classifier'
-    container 'kcammel/development_gcp:v0.0.1'
+    label 'high_resource'
+    //Docker container is currently changed to random public, as sturgeon is not public at the moment
+    //container 'kcammel/sturgeon:v2.1.0' //Make this dynamic? 
+    container 'hello-world:latest'
     containerOptions "--entrypoint /usr/bin/env -u 0:0 "
 
 
@@ -11,33 +14,18 @@ process sturgeon {
     path(model)
 
     output:
-    path("${outdir}/*"), emit: main_output
-
+    path("mock_run.txt"), emit: main_output
+    //path("${outdir}/*"), emit: main_output
+    
     script:
     """
-    SturgeonLivePrediction \
-    --input ${input} \
-    --output "${outdir}" \
-    --lock ${params.lock} \
-    --barcode 05 \
-    --model ${model} \
-    -sf "${params.shutdown_file}" > "sturgeon_output.log" 2>&1 &
+    echo "This would run the following command:" > mock_run.txt
+    echo "SturgeonLivePrediction \\
+    --input ${input} \\
+    --output ${outdir} \\
+    --barcode ${barcode} \\
+    --model ${model} \\
+    --live_run False" >> mock_run.txt
 
-
-    #Logic below is to currently handle shutdown for a nextflow/cloud run
-    STURGEON_PID=\$!
-
-    sleep 5
-
-    sleep ${params.sturgeon_timeout ?: 40}
-
-    touch "${params.shutdown_file}"
-
-    timeout 3000 bash -c "while kill -0 \$STURGEON_PID 2>/dev/null; do sleep 1; done" || true
-
-    wait \$STURGEON_PID 2>/dev/null || true
-
-    # Move log file after process completes
-    mv sturgeon_output.log "${outdir}/"
     """
 }
