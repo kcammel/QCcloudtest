@@ -30,7 +30,7 @@ process MOSDEPTH {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.sample_id}"
+    def prefix = task.ext.prefix ?: "${meta.sample_id}_adaptive"
     def interval = bed ? "--by ${bed}" : ""
     if (bed && (args.contains("--by") || args.contains("-b "))) {
         error "'--by' can only be specified once when running mosdepth! Either remove input BED file definition or remove '--by' from 'ext.args' definition"
