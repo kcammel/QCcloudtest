@@ -2,68 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/princessmaximacenter/sturgeon_classifier//nextflow_schema.json",
   "title": "princessmaximacenter/sturgeon_classifier pipeline parameters",
-  "description": "Sturgeon Classifier for Nanopore Methylation Sequencing data",
+  "description": "Nextflow run princessmaximacenter/nextflow_pipeline -profile {sturgeon,qc} -params-file {params.[json|yaml]}",
   "type": "object",
-  "$defs": {
-    "input_output_options": {
-      "title": "Input/output options",
-      "type": "object",
-      "fa_icon": "fas fa-terminal",
-      "description": "Define where the pipeline should find input data and save output data.",
-      "required": [
-        "input"
-      ],
-      "properties": {
-        "input": {
-          "type": "string",
-          "format": "directory-path",
-          "exists": true,
-          "schema": "assets/schema_input.json",
-          "description": "Directory where bam files ares. Input can be {nanopore_hash}/bam_pass/barcode_xx/, {nanopore_hash}/bam_pass/ or {nanopore_hash}/.",
-          "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-          "fa_icon": "fas fa-file-csv"
-        }
-      }
-    },
-    "sturgeon_options": {
-      "title": "Sturgeon parameters",
-      "type": "object",
-      "fa_icon": "fas fa-terminal",
-      "description": "Define Sturgeon specific parameters.",
-      "required": [
-        "barcode",
-        "model",
-        "shutdown_file",
-        "lock"
-      ],
-      "properties": {
-        "barcode": {
-          "type": "string",
-          "help_text": "Barcode number of sample"
-        },
-        "model": {
-          "type": "string",
-          "help_text": "Location of model file for prediction algorithm",
-          "default": "/Users/k.v.cammel/Developer/public_repos/sturgeon/sturgeon/include/models/general.zip"
-        },
-        "shutdown_file": {
-          "type": "string",
-          "help_text": "Name or location of shutdown flag for triggering end of classification",
-          "default": "shutdown.flag"
-        },
-        "lock": {
-          "type": "string",
-          "default": "script.lock"
-        }
-      }
+  "properties": {
+    "pipeline": {
+      "type": "string",
+      "description": "Set to a specific workflow after setting profile",
+      "enum": ["sturgeon", "qc"],
+      "hidden": true
     }
-  },
-  "allOf": [
-    {
-      "$ref": "#/$defs/input_output_options"
-    },
-    {
-      "$ref": "#/$defs/sturgeon_options"
-    }
-  ]
+  }
 }

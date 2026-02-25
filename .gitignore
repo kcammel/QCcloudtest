@@ -48,3 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Nextflow
+.nextflow*
+work/
+
+# test data
+test_data/
