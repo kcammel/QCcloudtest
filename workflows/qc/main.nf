@@ -22,8 +22,6 @@ include { NANOPLOT  as NANOPLOT_FULL } from '../../modules/local/nanoplot/main'
 include { NANOPLOT as NANOPLOT_SEQSUM } from '../../modules/local/nanoplot/main'
 include { NANOPLOT  as NANOPLOT_ADAPTIVE } from '../../modules/local/nanoplot/main'
 include { MOSDEPTH } from '../../modules/nf-core/mosdepth/main'
-include { summarize_stats } from '../../modules/local/summary'
-
 
 include { MULTIQC } from '../../modules/nf-core/multiqc/main'
 
@@ -56,7 +54,10 @@ workflow QC_ANALYSIS {
 
 
     // QC workflow for all sequencing (full BAM)
-    CRAMINO_FULL(ch_input.STD_BAM.mix(ch_input.ADPT))
+    CRAMINO_FULL( ch_input.STD_BAM.mix( 
+        ch_input.ADPT.map { meta, bam, bai, bed -> [meta, bam, bai] } 
+    ) 
+)
     ch_versions = ch_versions.mix(CRAMINO_FULL.out.versions)
 
     NANOPLOT_FULL(CRAMINO_FULL.out.arrow)
@@ -70,7 +71,11 @@ workflow QC_ANALYSIS {
     // Additional workflow for adaptive sampling
 
     MOSDEPTH(ch_input.ADPT)
-
+    //Mosdepth to multiqc
+    ch_mosdepth_for_multiqc = Channel.empty()
+        .mix(MOSDEPTH.out.global_txt, MOSDEPTH.out.summary_txt, MOSDEPTH.out.regions_txt)
+        .map { meta, file -> file }
+    ch_multiqc_files = ch_multiqc_files.mix(ch_mosdepth_for_multiqc.collect())
 
     ch_adaptive_bam = ch_input.ADPT
         .map{
