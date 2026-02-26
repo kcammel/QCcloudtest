@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nf-schema/example/master/assets/schema_input.json",
+  "title": "nf-schema example - params.input schema",
+  "description": "Schema for the samplesheet provided with params.input for QC analysis",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "sample_id": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "errorMessage": "Sample name must be provided and cannot contain spaces",
+        "meta": ["sample_id"]
+      },
+      "status": {
+        "type": "string",
+        "enum": ["tumor", "normal"],
+        "errorMessage": "Status must be provided and be one of 'tumor' or 'normal'",
+        "meta": ["status"]
+      },
+      "bam": {
+        "errorMessage": "Bam file must be provided for QC analysis",
+        "type": "string",
+        "pattern": "^\\S+\\.bam$"
+      },
+      "bai": {
+        "errorMessage": "Bam index file must be provided for QC analysis",
+        "type": "string",
+        "pattern": "^\\S+\\.bai$"
+      },
+      "seq_sum": {
+        "type": "string",
+        "errorMessage": "Sequencing summary must be a txt file",
+        "pattern": "^\\S+\\.txt$"
+      },
+      "adaptive": {
+        "type": "string",
+        "pattern": "^\\S+\\.bed$",
+        "errorMessage": "For adaptive sequencing workflow, bed file with target regions must be provided"
+      }
+    },
+    "required": ["sample_id", "status"],
+    "allOf": [
+      {
+        "description": "At least a bam + bam.bai file OR a sequencing summary should be provided",
+        "anyOf": [
+          { "required": ["bam"]},
+          { "required": ["seq_sum"]}
+        ]
+      },
+      {
+        "description": "If a bam is present, an indexed bai file should also be provided",
+        "dependentRequired": {
+          "bam": ["bai"]
+        }
+      },
+      {
+        "description": "If adaptive sampling was performed and a bed file is supplied, a bam + bam.bai entry must also be provided.",
+        "if": {
+          "required": ["adaptive"]
+        },
+        "then": {
+          "required": ["bam", "bai"]
+        } 
+      }
+    ]
+  },
+  "uniqueEntries": ["sample_id"]
+}
