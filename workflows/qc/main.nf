@@ -22,6 +22,7 @@ include { NANOPLOT  as NANOPLOT_FULL } from '../../modules/local/nanoplot/main'
 include { NANOPLOT as NANOPLOT_SEQSUM } from '../../modules/local/nanoplot/main'
 include { NANOPLOT  as NANOPLOT_ADAPTIVE } from '../../modules/local/nanoplot/main'
 include { MOSDEPTH } from '../../modules/nf-core/mosdepth/main'
+include {CALCULATE_ENRICHMENT} from '../../modules/local/calculate_enrichment/main'
 
 include { MULTIQC } from '../../modules/nf-core/multiqc/main'
 
@@ -71,11 +72,19 @@ workflow QC_ANALYSIS {
     // Additional workflow for adaptive sampling
 
     MOSDEPTH(ch_input.ADPT)
+    //Mosdepth calculate enrichment and make multiqc yaml
+
+    //Calculation and sample name needs to be dynamic
     //Mosdepth to multiqc
+
     ch_mosdepth_for_multiqc = Channel.empty()
         .mix(MOSDEPTH.out.global_txt, MOSDEPTH.out.summary_txt, MOSDEPTH.out.regions_txt)
         .map { meta, file -> file }
     ch_multiqc_files = ch_multiqc_files.mix(ch_mosdepth_for_multiqc.collect())
+
+    CALCULATE_ENRICHMENT(MOSDEPTH.out.summary_txt)
+    ch_multiqc_files = ch_multiqc_files.mix(CALCULATE_ENRICHMENT.out.multiqc.collect())
+    
 
     ch_adaptive_bam = ch_input.ADPT
         .map{
@@ -109,7 +118,7 @@ workflow QC_ANALYSIS {
         .mix(ch_workflow_summary)
         .mix(ch_collated_versions)
 
-
+    ch_multiqc_files.view()
     MULTIQC (
         ch_multiqc_files.collect(),
         [],
