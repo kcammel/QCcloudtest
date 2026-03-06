@@ -18,7 +18,7 @@ nextflow.enable.dsl=2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include {QC_ANALYSIS} from "./workflows/qc/main.nf"
-include {STURGEON} from "./workflows/sturgeon/main.nf"
+//include {STURGEON} from "./workflows/sturgeon/main.nf"
 
 include { paramsHelp } from 'plugin/nf-schema'
 
