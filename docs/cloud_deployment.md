@@ -21,7 +21,7 @@ The `nflaunch` tool will handle the orchestration and submission of the Nextflow
 
 ```csv
 sample_id,status,adaptive,bam,bai,seq_sum
-PBE82257,tumor,,gs://<BASE_BUCKET>/sequencing-data//input.bam,gs://<BASE_BUCKET>/sequencing-data//input.bam.bai
+PMBBM000AAA,tumor,,gs://<BASE_BUCKET>/sequencing-data//input.bam,gs://<BASE_BUCKET>/sequencing-data//PMBBM000AAA_input.bam.bai
 ```
 
 **Example nflaunch command:**
@@ -52,4 +52,9 @@ nflaunch \
 outdir: "gs://<BASE_BUCKET>/QC_results/"
 input: /etc/nextflow/qc_gcp_samplesheet.csv
 ```
+
+**Results will then be in:**
+`gs://<BASE_BUCKET>/QC_results/`
+
+
 ---
